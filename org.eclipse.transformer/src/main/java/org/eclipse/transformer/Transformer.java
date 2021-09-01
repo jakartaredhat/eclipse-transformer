@@ -40,26 +40,8 @@ import org.eclipse.transformer.TransformerLoggerFactory.LoggerProperty;
 import org.eclipse.transformer.action.ActionType;
 import org.eclipse.transformer.action.BundleData;
 import org.eclipse.transformer.action.Changes;
-import org.eclipse.transformer.action.impl.ActionImpl;
-import org.eclipse.transformer.action.impl.BundleDataImpl;
-import org.eclipse.transformer.action.impl.ClassActionImpl;
-import org.eclipse.transformer.action.impl.CompositeActionImpl;
-import org.eclipse.transformer.action.impl.DirectoryActionImpl;
-import org.eclipse.transformer.action.impl.EarActionImpl;
-import org.eclipse.transformer.action.impl.InputBufferImpl;
-import org.eclipse.transformer.action.impl.JarActionImpl;
-import org.eclipse.transformer.action.impl.JavaActionImpl;
-import org.eclipse.transformer.action.impl.ManifestActionImpl;
-import org.eclipse.transformer.action.impl.NullActionImpl;
-import org.eclipse.transformer.action.impl.PropertiesActionImpl;
-import org.eclipse.transformer.action.impl.RarActionImpl;
-import org.eclipse.transformer.action.impl.SelectionRuleImpl;
-import org.eclipse.transformer.action.impl.ServiceLoaderConfigActionImpl;
-import org.eclipse.transformer.action.impl.SignatureRuleImpl;
-import org.eclipse.transformer.action.impl.TextActionImpl;
-import org.eclipse.transformer.action.impl.WarActionImpl;
+import org.eclipse.transformer.action.impl.*;
 // import org.eclipse.transformer.action.impl.XmlActionImpl;
-import org.eclipse.transformer.action.impl.ZipActionImpl;
 import org.eclipse.transformer.util.FileUtils;
 import org.slf4j.Logger;
 
@@ -814,9 +796,9 @@ public class Transformer {
 			dual_debug(
 				"Merge of [ %s ] into [ %s ], key [ %s ] un-orphans [ %s ]",
 				sourceName, sinkName, key, newValue);
-		}		
+		}
 	}
-	
+
 	protected void logMerge(String sourceName, String sinkName, Object key, Object oldValue, Object newValue) {
 		// System.out.println("Key [ " + key + " ] Old [ " + oldValue + " ] New
 		// [ " + newValue + " ]");
@@ -1347,7 +1329,7 @@ public class Transformer {
 						substitutionsRef,
 						relativeSubstitutionsRef);
 				}
-				
+
 				substitutions = loadExternalProperties(
 					"Substitions matching [ " + selector + " ]", relativeSubstitutionsRef);
 				// throws URISyntaxException, IOException
@@ -1667,6 +1649,7 @@ public class Transformer {
 					.addUsing(ServiceLoaderConfigActionImpl::new);
 				ManifestActionImpl manifestAction = useRootAction.addUsing(ManifestActionImpl::newManifestAction);
 				ManifestActionImpl featureAction = useRootAction.addUsing(ManifestActionImpl::newFeatureAction);
+				QuarkusActionImpl quarkusAction = useRootAction.addUsing(QuarkusActionImpl::new);
 				PropertiesActionImpl propertiesAction = useRootAction.addUsing(PropertiesActionImpl::new);
 
 				JarActionImpl jarAction = useRootAction.addUsing(JarActionImpl::new);
@@ -1704,6 +1687,7 @@ public class Transformer {
 				jarAction.addAction(manifestAction);
 				jarAction.addAction(featureAction);
 				jarAction.addAction(textAction);
+				jarAction.addAction(quarkusAction);
 				jarAction.addAction(propertiesAction);
 				jarAction.addAction(nullAction);
 
